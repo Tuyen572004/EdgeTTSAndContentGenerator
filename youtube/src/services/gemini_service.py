@@ -425,69 +425,69 @@ Only return valid JSON array with 1 object, no other text.
         except Exception as e:
             print(f"Error generating script with Gemini: {e}")
             return self._get_default_script(content_idea, content_analysis)
-        def _get_default_analysis(self) -> Dict[str, Any]:
-            """Fallback analysis if Gemini fails"""
-            return {
-                "content_type": "general",
-                "primary_category": "entertainment",
-                "tone": "neutral",
-                "target_audience": "general audience",
-                "content_style": "informational",
-                "keywords": ["general", "content"],
-                "themes": ["general"],
-                "engagement_potential": "medium",
-                "recommended_approach": "informational_engaging",
-                "content_depth": "intermediate",
-                "emotional_hooks": [],
-                "trending_elements": ["general"],
-                "improvement_opportunities": [],
-                "competitive_advantages": [],
-                "content_gaps": []
-            }
+    def _get_default_analysis(self) -> Dict[str, Any]:
+        """Fallback analysis if Gemini fails"""
+        return {
+            "content_type": "general",
+            "primary_category": "entertainment",
+            "tone": "neutral",
+            "target_audience": "general audience",
+            "content_style": "informational",
+            "keywords": ["general", "content"],
+            "themes": ["general"],
+            "engagement_potential": "medium",
+            "recommended_approach": "informational_engaging",
+            "content_depth": "intermediate",
+            "emotional_hooks": [],
+            "trending_elements": ["general"],
+            "improvement_opportunities": [],
+            "competitive_advantages": [],
+            "content_gaps": []
+        }
+    
+    def _get_default_content_ideas(self, title: str, analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Fallback content ideas if Gemini fails - ONLY 1 VIDEO"""
+        if not isinstance(analysis, dict):
+            analysis = {}
         
-        def _get_default_content_ideas(self, title: str, analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
-            """Fallback content ideas if Gemini fails - ONLY 1 VIDEO"""
-            if not isinstance(analysis, dict):
-                analysis = {}
-            
-            return [
+        return [
+            {
+                "title": f"My Take on {title[:30]}",
+                "description": "A unique perspective on the original content",
+                "target_audience": analysis.get("target_audience", "general audience"),
+                "estimated_duration": "1-2 minutes",
+                "content_type": analysis.get("content_type", "tutorial")
+            }
+        ]
+    
+    def _get_default_script(self, idea: Dict[str, Any], analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Fallback script if Gemini fails"""
+        if not isinstance(idea, dict):
+            idea = {}
+        
+        return {
+            "title": idea.get("title", "Default Title"),
+            "total_duration": "1-2 minutes",
+            "segments": [
                 {
-                    "title": f"My Take on {title[:30]}",
-                    "description": "A unique perspective on the original content",
-                    "target_audience": analysis.get("target_audience", "general audience"),
-                    "estimated_duration": "1-2 minutes",
-                    "content_type": analysis.get("content_type", "tutorial")
+                    "segment_type": "intro",
+                    "duration": "30 seconds",
+                    "content": "Welcome back! Today we're diving into an exciting topic...",
+                    "notes": "High energy opening, make eye contact with camera"
+                },
+                {
+                    "segment_type": "main_content",
+                    "duration": "45s - 1.5 minutes",
+                    "content": "Let me break this down for you step by step...",
+                    "notes": "Use examples, keep engagement high"
+                },
+                {
+                    "segment_type": "conclusion",
+                    "duration": "30 seconds",
+                    "content": "That's everything you need to know! Hope this was helpful...",
+                    "notes": "Summarize key takeaways"
                 }
-            ]
-        
-        def _get_default_script(self, idea: Dict[str, Any], analysis: Dict[str, Any]) -> Dict[str, Any]:
-            """Fallback script if Gemini fails"""
-            if not isinstance(idea, dict):
-                idea = {}
-            
-            return {
-                "title": idea.get("title", "Default Title"),
-                "total_duration": "1-2 minutes",
-                "segments": [
-                    {
-                        "segment_type": "intro",
-                        "duration": "30 seconds",
-                        "content": "Welcome back! Today we're diving into an exciting topic...",
-                        "notes": "High energy opening, make eye contact with camera"
-                    },
-                    {
-                        "segment_type": "main_content",
-                        "duration": "45s - 1.5 minutes",
-                        "content": "Let me break this down for you step by step...",
-                        "notes": "Use examples, keep engagement high"
-                    },
-                    {
-                        "segment_type": "conclusion",
-                        "duration": "30 seconds",
-                        "content": "That's everything you need to know! Hope this was helpful...",
-                        "notes": "Summarize key takeaways"
-                    }
-                ],
-                "thumbnail_suggestions": ["Bold title text", "High contrast colors", "Clear value proposition"],
-                "seo_tags": ["tutorial", "guide", "how to", "tips"]
-            }
+            ],
+            "thumbnail_suggestions": ["Bold title text", "High contrast colors", "Clear value proposition"],
+            "seo_tags": ["tutorial", "guide", "how to", "tips"]
+        }
